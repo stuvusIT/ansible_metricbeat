@@ -2,25 +2,20 @@
 
 Setup a metricbeat instance.
 
-
 ## Requirements
 
 An apt based linux system
 
 ## Role Variables
 
-
 | Variable           | Default / Mandatory                                                                                                                                  | Description                                                                                                                                                                                                                                              |
 |--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `metricbeat_config`  | `{ output.elasticsearch: { hosts: ["localhost:9200"] }, metricbeat.config.modules: { reload.enabled: false } }` | Since the metricbeat settings file is a yaml file we write the whole object to the settings file. For more Information please see the [metricbeat settings file documentation](https://www.elastic.co/guide/en/metricbeat/current/metricbeat-settings-file.html) |
-| `metricbeat_modules` | `[]`                                                                                                                                                 | List of config files to write to modules.d/. More information below.                                                                                                                                                                                     |
+| `metricbeat_modules` | `{}`                                                                                                                                                 | Dict of config files to write to modules.d/. More information below.                                                                                                                                                                                     |
 
 ### `metricbeat_modules`
 Each entry in the `metricbeat_modules` consists out of the following entries.
-| Variable | Default / Mandatory | Description                                                                              |
-|----------|---------------------|------------------------------------------------------------------------------------------|
-| `name`   | :heavy_check_mark:  | Name of the module config file. This value has to be the same as the name of the module. |
-| `config` | :heavy_check_mark:  | Yaml config for the module name .                                                        |
+The key of each entry is used to determine the name of the config file and the content of the entry is writen to the config file
 
 ## Example Playbook
 
@@ -34,12 +29,10 @@ Each entry in the `metricbeat_modules` consists out of the following entries.
       output.logstash:
         hosts: ["localhost:9200"]
 	metricbeat_modules:
-      - name: graphite
-	    config: 
+    graphite:
 		  - module: graphite
 		    metricsets: ["server"]
 			enabled: true
-
 ```
 
 ## License

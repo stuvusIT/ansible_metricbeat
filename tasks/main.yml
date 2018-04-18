@@ -1,10 +1,7 @@
 ---
-
 - name: Install apt-transport-https
   apt: 
-    name: "{{ item }}"
-  with_items:
-    - apt-transport-https
+    name: apt-transport-https
 
 - name: Add Elasticsearch repository key
   apt_key: 
@@ -26,10 +23,10 @@
 
 - name: Place metricbeat module configs file
   copy:
-    content: "{{ item.config | to_nice_yaml }}"
-    dest: "/etc/metricbeat/modules.d/{{ item.name }}.yml"
+    content: "{{ item.value | to_nice_yaml }}"
+    dest: "/etc/metricbeat/modules.d/{{ item.key }}.yml"
   notify: Restart metricbeat
-  with_items: "{{ metricbeat_modules }}"
+  with_dict: "{{ metricbeat_modules }}"
 
 - name: Enable metricbeat
   systemd:

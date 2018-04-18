@@ -3,6 +3,6 @@ metricbeat_config:
     hosts: ["localhost:9200"]
   metricbeat.config.modules:
     reload.enabled: false
-metricbeat_modules: []
+metricbeat_modules: {}
 
 
