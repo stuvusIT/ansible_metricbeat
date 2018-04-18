@@ -33,6 +33,13 @@ Each entry in the `metricbeat_modules` consists out of the following entries.
         reload.enabled: false
       output.logstash:
         hosts: ["localhost:9200"]
+	metricbeat_modules:
+      - name: graphite
+	    config: 
+		  - module: graphite
+		    metricsets: ["server"]
+			enabled: true
+
 ```
 
 ## License
