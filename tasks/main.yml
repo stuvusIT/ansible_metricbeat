@@ -1,0 +1,38 @@
+---
+
+- name: Install apt-transport-https
+  apt: 
+    name: "{{ item }}"
+  with_items:
+    - apt-transport-https
+
+- name: Add Elasticsearch repository key
+  apt_key: 
+    url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+- name: Add metricebeat repository
+  apt_repository: 
+    repo: deb https://artifacts.elastic.co/packages/6.x/apt stable main
+
+- name: Ensure metricbeat is installed
+  apt: 
+    name: metricbeat
+
+- name: Place metricbeat config file
+  copy:
+    content: "{{ metricbeat_config | to_nice_yaml }}"
+    dest: /etc/metricbeat/metricbeat.yml
+  notify: Restart metricbeat
+
+- name: Place metricbeat module configs file
+  copy:
+    content: "{{ item.config | to_nice_yaml }}"
+    dest: "/etc/metricbeat/modules.d/{{ item.name }}.yml"
+  notify: Restart metricbeat
+  with_items: "{{ metricbeat_modules }}"
+
+- name: Enable metricbeat
+  systemd:
+    name: metricbeat
+    enabled: yes
+    state: started
